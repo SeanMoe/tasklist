@@ -8,7 +8,7 @@
 	var config = require('./config')
 	var port = process.env.PORT || 3000;
 
-	mongoose.connect(config.mongoose.db);
+	mongoose.connect(config.mongoose.db||process.env.db);
 
 	mongoose.connection.db.dropDatabase();
 
@@ -21,7 +21,7 @@
 		tasks:[TaskSchema]
 	});
 
-	app.use(express.basicAuth(config.auth.username,config.auth.password));
+	app.use(express.basicAuth(config.auth.username||process.env.username,config.auth.password||process.env.password));
 
 	var User = mongoose.model('User',UserSchema);
 	var Task = mongoose.model('Task',TaskSchema);
