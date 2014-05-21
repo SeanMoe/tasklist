@@ -25,11 +25,17 @@
 	<script src="core.js"></script>
 	<style type="text/css">
 		body{
-			width:50%;
+			width:75%;
 			margin:auto;
 		}
 		li{
 			text-decoration:none;
+		}
+		.refresh-btn{
+			position:fixed;
+			right:2%;
+			z-index:9999;
+			top:25%;
 		}
 	</style>
 </head>
@@ -43,7 +49,9 @@
 			<input type="submit" class="btn btn-primary pull-right" value="Submit User">
 		</fieldset>
 	</form>
-	<button class="btn btn-primary pull-right" ng-click="main.refreshTasks()"><i class="fa fa-refresh fa-2x"> Refresh</i></button>
+	<div class="refresh-btn">
+		<button class="btn btn-primary pull-right" ng-click="main.refreshTasks()"><i class="fa fa-refresh fa-2x"> Refresh</i></button>	
+	</div>
 	<br /> 
 		<header>
 			<h1 class="text-center">AHP Tasks</h1>
