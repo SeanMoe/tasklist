@@ -42,6 +42,16 @@
 				console.log("Error"+data);
 			});
 
+		this.refreshTasks = function(){
+			$http.get('/api/users')
+			.success(function(data){
+				main.people = data;
+			}).
+			error(function(data){
+				console.log("Error"+data);
+			});
+		}
+
 		this.deleteTask = function(user,task){
 			$http.delete('/api/users/'+user._id+'/task/'+task._id).
 				success(function(data){

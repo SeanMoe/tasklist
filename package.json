@@ -5,6 +5,7 @@
   "main"         : "server.js",
   "author"       : "Sean",
   "dependencies" : {
+    "socket.io"  : "latest",
     "express"    : "~3.4.4",
     "mongoose"   : "~3.6.2"
     }

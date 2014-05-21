@@ -5,6 +5,7 @@
 	var app = express();
 	var mongoose = require('mongoose');
 	var Schema = mongoose.Schema;
+	var port = process.env.PORT || 3000;
 
 	mongoose.connect('mongodb://moe:fluffybunny@ds047468.mongolab.com:47468/moedb');
 
@@ -89,5 +90,10 @@
 		})
 	});
 
-	app.listen(process.env.PORT || 3000);
-	console.log("App listening on port 3000");
+	var io = require('socket.io').listen(app.listen(port));
+	io.sockets.on('connection',function(socket){
+		socket.emit('message',{message:'welcome to tasks'});
+		socket.on('send',function(data){
+			io.sockets.emit('message',data);
+		});
+	});
