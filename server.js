@@ -5,9 +5,10 @@
 	var app = express();
 	var mongoose = require('mongoose');
 	var Schema = mongoose.Schema;
+	var config = require('./config')
 	var port = process.env.PORT || 3000;
 
-	mongoose.connect('mongodb://moe:fluffybunny@ds047468.mongolab.com:47468/moedb');
+	mongoose.connect(config.mongoose.db);
 
 	mongoose.connection.db.dropDatabase();
 
