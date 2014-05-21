@@ -21,6 +21,8 @@
 		tasks:[TaskSchema]
 	});
 
+	app.use(express.basicAuth(config.auth.username,config.auth.password));
+
 	var User = mongoose.model('User',UserSchema);
 	var Task = mongoose.model('Task',TaskSchema);
 
