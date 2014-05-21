@@ -5,10 +5,14 @@
 	var app = express();
 	var mongoose = require('mongoose');
 	var Schema = mongoose.Schema;
-	var config = require('./config')
+	if(!process.env.username){
+		var config = require('./config')
+	}
 	var port = process.env.PORT || 3000;
 
-	mongoose.connect(config.mongoose.db||process.env.db);
+	dbconfig = config.mongoose.db || process.env.db;
+
+	mongoose.connect(dbconfig);
 
 	mongoose.connection.db.dropDatabase();
 
@@ -21,7 +25,10 @@
 		tasks:[TaskSchema]
 	});
 
-	app.use(express.basicAuth(config.auth.username||process.env.username,config.auth.password||process.env.password));
+	username = config.auth.username || process.env.username;
+	password = config.auth.password || process.env.password;
+
+	app.use(express.basicAuth(username, password));
 
 	var User = mongoose.model('User',UserSchema);
 	var Task = mongoose.model('Task',TaskSchema);
