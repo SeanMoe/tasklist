@@ -5,14 +5,20 @@
 	var app = express();
 	var mongoose = require('mongoose');
 	var Schema = mongoose.Schema;
-	if(!process.env.username){
+	if(process.env.node_env != 'production'){
 		var config = require('./config')
-	}
+	} else {
+		config = {}
+		config.mongoose = {};
+		config.auth = {};
+		config.mongoose.db = process.env.db;
+		config.auth.username = process.env.username;
+		config.auth.password = process.env.password;
+	}	
+	
 	var port = process.env.PORT || 3000;
 
-	dbconfig = config.mongoose.db || process.env.db;
-
-	mongoose.connect(dbconfig);
+	mongoose.connect(config.mongoose.db);
 
 	mongoose.connection.db.dropDatabase();
 
@@ -25,8 +31,8 @@
 		tasks:[TaskSchema]
 	});
 
-	username = config.auth.username || process.env.username;
-	password = config.auth.password || process.env.password;
+	username = config.auth.username;
+	password = config.auth.password;
 
 	app.use(express.basicAuth(username, password));
 
