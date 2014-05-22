@@ -16,7 +16,7 @@
 	});
 		
 	app.controller('TaskController',function($http){
-		var socket = io.connect('ahptasks.herokuapp.com:8000');
+		var socket = io.connect();
 		this.task = {};
 		var big = this;
 
@@ -53,7 +53,7 @@
 	});
 		
 	app.controller('MainController',function($http){
-		var socket = io.connect("ahptasks.herokuapp.com:8000");
+		var socket = io.connect();
 		var main = this;
 
 		socket.on('add:user',function(data){
