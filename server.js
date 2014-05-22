@@ -95,8 +95,8 @@
 			task.text = req.body.text;
 			user.tasks.push(task);
 			user.save();
-			io.sockets.emit('task:add');
 			res.json(task);
+			io.sockets.emit('task:add:user:'+user._id);
 		});
 	});
 
@@ -120,8 +120,8 @@
 		User.findById(req.params.user_id,function(err,user){
 			user.tasks.pull({_id:req.params.task_id});
 			user.save();
-			io.sockets.emit('task:delete');
 			res.json(user.tasks);
+			io.sockets.emit('task:delete:user:'+user._id);
 		});
 	});
 

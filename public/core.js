@@ -21,10 +21,10 @@
 		var big = this;
 
 		this.connect = function(user){
-			socket.on('task:add',function(data){
+			socket.on('task:add:user:'+user._id,function(data){
 				big.updateTasks(user);
 			});
-			socket.on('task:delete',function(data){
+			socket.on('task:delete:user:'+user._id,function(data){
 				big.updateTasks(user);
 			});
 		}
