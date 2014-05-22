@@ -16,7 +16,7 @@
 	});
 		
 	app.controller('TaskController',function($http){
-		var socket = io.connect('http://localhost');
+		var socket = io.connect();
 		this.task = {};
 		var big = this;
 
@@ -53,7 +53,7 @@
 	});
 		
 	app.controller('MainController',function($http){
-		var socket = io.connect('http://localhost');
+		var socket = io.connect();
 		var main = this;
 
 		socket.on('add:user',function(data){
