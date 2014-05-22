@@ -1,5 +1,5 @@
 (function(){
-	var app = angular.module('ahpTasks', []);
+	var app = angular.module('ahpTasks', ['naturalSort']);
 
 	app.controller("UserController",function($http){
 		this.user={};
@@ -21,10 +21,7 @@
 		var big = this;
 
 		this.connect = function(user){
-			socket.on('task:add:user:'+user._id,function(data){
-				big.updateTasks(user);
-			});
-			socket.on('task:delete:user:'+user._id,function(data){
+			socket.on('task:update:user:'+user._id,function(data){
 				big.updateTasks(user);
 			});
 		}
@@ -66,6 +63,10 @@
 			});
 		});
 
+		socket.on('delete:user',function(data){
+			main.people.splice(data,1);
+		});
+
 		$http.get('/api/users')
 			.success(function(data){
 				main.people = data;
@@ -74,15 +75,72 @@
 				console.log("Error"+data);
 			});
 
-		this.refreshTasks = function(){
-			$http.get('/api/users')
-			.success(function(data){
-				main.people = data;
+		this.toggleComplete = function(user,task){
+			$http.post('/api/users/'+user._id+'/task/'+task._id+'/complete').
+			success(function(data){
+
 			}).
 			error(function(data){
-				console.log("Error"+data);
+
+			});
+		};
+
+		this.clearComplete = function(user){
+			$http.post('/api/users/'+user._id+'/clearcomplete').
+			success(function(data){
+
+			}).
+			error(function(data){
+				
 			});
 		}
+
+		this.taskConnect = function(user){
+			socket.on('up:user'+user._id,function(data){
+				console.log("called");
+				big.updateTasks(user);
+			});
+			socket.on('down:user'+user._id,function(data){
+				big.updateTasks(user);
+			});
+		};
+
+		this.updateTasks = function(user){
+			$http.get('/api/users/'+user._id+'/tasks').
+			success(function(tasks){
+				user.tasks = tasks;
+			}).
+			error(function(error){
+				console.log("Error "+error);
+			});
+		};
+
+		this.upTask = function(user,task){
+			$http.post('/api/users/'+user._id+'/task/'+task._id+'/up').
+			success(function(data){
+			}).
+			error(function(data){
+			});
+		};
+
+		this.downTask = function(user,task){
+			$http.post('/api/users/'+user._id+'/task/'+task._id+'/down').
+			success(function(data){
+
+			}).
+			error(function(data){
+
+			});
+		};
+
+		this.deleteUser = function(user, index){
+			$http.delete('/api/users/'+user._id+'/'+index).
+			success(function(data){
+			}).
+			error(function(data){
+				console.log("Error "+data)
+			});
+		};
 
 		this.deleteTask = function(user,task){
 			$http.delete('/api/users/'+user._id+'/task/'+task._id).

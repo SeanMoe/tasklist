@@ -24,6 +24,7 @@
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js"></script><!-- load angular -->
 	<script src="/socket.io/socket.io.js"></script><!-- load socket.io -->
 	<script src="core.js"></script>
+	<script src="naturalSort.js"></script>
 	<style type="text/css">
 		body{
 			width:75%;
@@ -31,6 +32,21 @@
 		}
 		li{
 			text-decoration:none;
+		}
+		.fa-arrow-up{
+			color:red;
+		}
+		.fa-arrow-down{
+			color:green;
+		}
+		.escalate{
+			font-weight:bold;
+			font-size:1.2em;
+			color:red;
+		}
+		.complete{
+			text-decoration: line-through;
+			font-color:grey;
 		}
 	</style>
 </head>
@@ -49,17 +65,23 @@
 			<h1 class="text-center">AHP Tasks</h1>
 		</header>
 		<div class="list-group">
-			<div class="list-group-item" ng-repeat="user in main.people">
+			<div class="list-group-item" ng-repeat="user in main.people track by user._id" ng-init="main.taskConnect(user)">
+				<button class="btn btn-danger pull-right" ng-click="main.deleteUser(user,$index)">Delete User</button>
 				<h3>{{user.name}}</h3>
 				<ul>
 					<h4>Tasks</h4>
-					<div ng-repeat="task in user.tasks">
+					<div ng-repeat="task in user.tasks | orderBy:natural('priority')">
+						<span ng-class="{'escalate':task.priority > 10,'complete':task.complete}">
+						<input type="checkbox" ng-click="main.toggleComplete(user,task)" ng-checked="task.complete">
 						<a href=""><i class="fa fa-trash-o" ng-click="main.deleteTask(user,task)"></i></a> {{task.text}}
+						&nbsp;&nbsp;&nbsp;&nbsp;{{task.priority}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+						<a href=""><i class="fa fa-arrow-up fa-lg" ng-click="main.upTask(user,task)"></i></a>
+						<a href=""><i class="fa fa-arrow-down fa-lg" ng-click="main.downTask(user,task)"></i></a>
 					</div>
+					<button class="btn btn-warning pull-right" ng-click="main.clearComplete(user)">Clear Completed Tasks</button>
 				</ul>
 				<form name="taskForm" ng-controller="TaskController as taskCtrl" ng-submit="taskCtrl.addTask(user)" ng-init="taskCtrl.connect(user)">
 					{{taskCtrl.task.text}}
-					<input type="hidden" ng-value="user._id">
 					<h4>Add a task</h4>
 					<fieldset class="form-group">
 						<textarea ng-model="taskCtrl.task.text" class="form-control" placeholder="Carrying around a ladder" title="Name"></textarea>
