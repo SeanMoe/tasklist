@@ -46,7 +46,7 @@
 	});
 
 	app.get('/api/users',function(req,res){
-		User.find(function(err,users){
+		User.find({},null,{sort:{_id:1}},function(err,users){
 			if(err)
 				console.log(err);
 
@@ -54,12 +54,24 @@
 		});
 	});
 
+	app.get('/api/users/:id',function(req,res){
+		User.findById(req.params.id,function(err,user){
+			if(err)
+				console.log(err);
+
+			res.json(user);
+		});
+	});
+
 	app.post('/api/users',function(req,res){
 		User.create({
 			name:req.body.name
 		}, function(err,user){
+			io.sockets.emit("add:user",user);
+
 			if(err)
 				console.log(err);
+
 			User.find(function(err,users){
 				if(err)
 					console.log(err);
@@ -68,16 +80,22 @@
 		});
 	});
 
+	app.get('/api/users/:id/tasks',function(req,res){
+		User.findById(req.params.id,function(err,user){
+			if(err)
+				console.log(err);
+
+			res.json(user.tasks);
+		})
+	})
+
 	app.post('/api/users/:user_id',function(req,res){
 		User.findById(req.params.user_id,function(err,user){
 			var task = new Task;
 			task.text = req.body.text;
 			user.tasks.push(task);
 			user.save();
-			var response = {
-				name:req.body.text,
-				_id:user.tasks[user.tasks.length-1]._id
-			}
+			io.sockets.emit('task:add');
 			res.json(task);
 		});
 	});
@@ -102,14 +120,12 @@
 		User.findById(req.params.user_id,function(err,user){
 			user.tasks.pull({_id:req.params.task_id});
 			user.save();
+			io.sockets.emit('task:delete');
 			res.json(user.tasks);
-		})
+		});
 	});
 
 	var io = require('socket.io').listen(app.listen(port));
 	io.sockets.on('connection',function(socket){
-		socket.emit('message',{message:'welcome to tasks'});
-		socket.on('send',function(data){
-			io.sockets.emit('message',data);
-		});
+		
 	});

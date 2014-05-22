@@ -8,11 +8,11 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
 
-	<title>Node/Angular task App</title>
+	<title>AHP Tasks</title>
 
 	<!-- SCROLLS -->
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" />
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.min.css" />
 	<style>
 		html 					{ overflow-y:scroll; }
 		body 					{ padding-top:50px; }
@@ -22,6 +22,7 @@
 	<!-- SPELLS -->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js"></script><!-- load angular -->
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script><!-- load socket.io -->
 	<script src="core.js"></script>
 	<style type="text/css">
 		body{
@@ -31,27 +32,18 @@
 		li{
 			text-decoration:none;
 		}
-		.refresh-btn{
-			position:fixed;
-			right:2%;
-			z-index:9999;
-			top:25%;
-		}
 	</style>
 </head>
 <!-- SET THE CONTROLLER AND GET ALL taskS -->
 	<body ng-controller="MainController as main">
-	<form name="userForm" ng-controller="UserController as newUser" ng-submit="newUser.addUser(main,newUser)">
+	<form name="userForm" ng-controller="UserController as newUser" ng-submit="newUser.addUser(main,newUser.user)">
 		<fieldset class="form-group">
-			<input type="text" ng-model="newUser.name" class="form-control" placeholder="Name" title="Name" />
+			<input type="text" ng-model="newUser.user.name" class="form-control" placeholder="Name" title="Name" />
 		</fieldset>
 		<fieldset class="form-group">
 			<input type="submit" class="btn btn-primary pull-right" value="Submit User">
 		</fieldset>
 	</form>
-	<div class="refresh-btn">
-		<button class="btn btn-primary pull-right" ng-click="main.refreshTasks()"><i class="fa fa-refresh fa-2x"> Refresh</i></button>	
-	</div>
 	<br /> 
 		<header>
 			<h1 class="text-center">AHP Tasks</h1>
@@ -65,7 +57,7 @@
 						<a href=""><i class="fa fa-trash-o" ng-click="main.deleteTask(user,task)"></i></a> {{task.text}}
 					</div>
 				</ul>
-				<form name="taskForm" ng-controller="TaskController as taskCtrl" ng-submit="taskCtrl.addTask(user)">
+				<form name="taskForm" ng-controller="TaskController as taskCtrl" ng-submit="taskCtrl.addTask(user)" ng-init="taskCtrl.connect(user)">
 					{{taskCtrl.task.text}}
 					<input type="hidden" ng-value="user._id">
 					<h4>Add a task</h4>
