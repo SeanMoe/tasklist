@@ -65,7 +65,6 @@
 		this.clearComplete = function(user){
 			$http.post('/api/users/'+user._id+'/clearcomplete').
 			success(function(data){
-
 			}).
 			error(function(data){
 				
