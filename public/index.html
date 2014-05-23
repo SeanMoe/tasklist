@@ -108,14 +108,15 @@
 							<h3 class="text-center">{{user.name}}</h3>
 							<div class="pull-left deleteUser text-center" style="margin-bottom:15px;" ng-click="main.deleteUser(user,$index)"><i class="fa fa-trash-o fa-2x"></i></div>
 							<h4>Tasks</h4>
-							<table class="table">
+							<div class="table-responsive">
+							<table class="table table-condensed">
 							<thead>
 								<th class="text-center">Complete</th>
 								<th class="text-center">Delete</th>
-								<th>Task</th>
+								<th >Task</th>
 								<th class="text-center">Priority</th>
-								<th class="text-center">Increase</th>
-								<th class="text-center">Decrease</th>
+								<th class="text-center">Up</th>
+								<th class="text-center">Down</th>
 							</thead>
 							<tbody>
 							<tr ng-hide="user.newTask.text == ''">
@@ -136,6 +137,7 @@
 							</tr>
 							</tbody>
 							</table>
+						</div>
 							</div>
 						<form name="taskForm" ng-submit="main.addTask(user,user.newTask)">
 							<fieldset class="form-group">
