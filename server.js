@@ -121,7 +121,6 @@
 		User.findById(req.params.id,function(err,user){
 			if(err)
 				console.log(err);
-			console.log(user.tasks);
 			res.json(user.tasks);
 		})
 	})
