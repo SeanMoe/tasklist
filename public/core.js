@@ -15,40 +15,6 @@
 		};
 	});
 		
-	app.controller('TaskController',function($http){
-		var socket = io.connect();
-		this.task = {};
-		var big = this;
-
-		this.connect = function(user){
-			socket.on('task:update:user:'+user._id,function(data){
-				big.updateTasks(user);
-			});
-		}
-
-		this.updateTasks = function(user){
-			$http.get('/api/users/'+user._id+'/tasks').
-			success(function(tasks){
-				user.tasks = tasks;
-			}).
-			error(function(error){
-				console.log("Error "+error);
-			});
-		}
-
-		this.addTask = function(user){
-			var main = this;
-			$http.post('/api/users/'+user._id,this.task).
-			success(function(data){
-				main.task={};
-				console.log(data);
-			}).
-			error(function(data){
-				console.log("Error"+data);
-			});
-		};
-	});
-		
 	app.controller('MainController',function($http){
 		var socket = io.connect();
 		var main = this;
@@ -75,6 +41,17 @@
 				console.log("Error"+data);
 			});
 
+		this.addTask = function(user,task){
+			user.newTask={'text':''};
+			$http.post('/api/users/'+user._id,task).
+			success(function(data){
+				console.log(data);
+			}).
+			error(function(data){
+				console.log("Error"+data);
+			});
+		};
+
 		this.toggleComplete = function(user,task){
 			$http.post('/api/users/'+user._id+'/task/'+task._id+'/complete').
 			success(function(data){
@@ -96,12 +73,15 @@
 		}
 
 		this.taskConnect = function(user){
+			user.newTask = {'text':''};
 			socket.on('up:user'+user._id,function(data){
-				console.log("called");
-				big.updateTasks(user);
+				main.updateTasks(user);
 			});
 			socket.on('down:user'+user._id,function(data){
-				big.updateTasks(user);
+				main.updateTasks(user);
+			});
+			socket.on('task:update:user:'+user._id,function(data){
+				main.updateTasks(user);
 			});
 		};
 
@@ -113,7 +93,7 @@
 			error(function(error){
 				console.log("Error "+error);
 			});
-		};
+		}
 
 		this.upTask = function(user,task){
 			$http.post('/api/users/'+user._id+'/task/'+task._id+'/up').

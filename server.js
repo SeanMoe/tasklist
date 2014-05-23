@@ -69,7 +69,6 @@
 		topull = [];
 		User.findById(req.params.user_id,function(err,user){
 			for(var i=0;i<user.tasks.length;i++){
-				console.log(user.tasks[i].complete);
 				if(user.tasks[i].complete){
 					topull.push(user.tasks[i]._id);
 				}
@@ -95,7 +94,6 @@
 					}
 				}
 			}
-			console.log(user.tasks);
 			user.save();
 			res.json("Success");
 			io.sockets.emit("task:update:user:"+req.params.user_id);
@@ -141,7 +139,6 @@
 	});
 
 	app.delete('/api/users/:id/:index',function(req,res){
-		console.log(req.body);
 		io.sockets.emit("delete:user",req.params.index);
 		User.remove({
 			_id:req.params.id

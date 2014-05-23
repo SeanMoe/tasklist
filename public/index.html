@@ -25,19 +25,9 @@
 	<script src="/socket.io/socket.io.js"></script><!-- load socket.io -->
 	<script src="core.js"></script>
 	<script src="naturalSort.js"></script>
-	<style type="text/css">
-		body{
-			width:75%;
-			margin:auto;
-		}
+	<style type="text/css">	
 		li{
 			text-decoration:none;
-		}
-		.fa-arrow-up{
-			color:red;
-		}
-		.fa-arrow-down{
-			color:green;
 		}
 		.escalate{
 			font-weight:bold;
@@ -45,13 +35,54 @@
 			color:red;
 		}
 		.complete{
+			opacity:.4;
 			text-decoration: line-through;
-			font-color:grey;
+			color:green;
+		}
+		.user-box{
+			position:relative;
+			margin:0 0 30px;
+			right:0;
+		}
+		.inner-user{
+			display:block;
+			margin-bottom:20px;
+			border:1px solid #ddd;
+			padding:10px;
+			border-radius:4px;
+		}
+		.middle-valign{
+			vertical-align:middle !important;
+		}
+		.completeBtn:hover, .downPriority:hover{
+			color:white;
+			background-color:green;
+		}
+		.deleteBtn:hover, .upPriority:hover{
+			color:white;
+			background-color:red;			
+		}
+		td{
+			-ms-word-break:break-all;
+			word-break:break-all;
+		}		
+		.deleteUser{
+			position:absolute;
+			background-color:#ddd;
+			top:10px;
+			left:30px;
+			border:1px solid grey;
+			color:black;
+			width:50px;
+		}	
+		.deleteUser:hover{
+			color:red;
 		}
 	</style>
 </head>
-<!-- SET THE CONTROLLER AND GET ALL taskS -->
 	<body ng-controller="MainController as main">
+	<div class="row">
+	<div class="col-lg-8 col-lg-offset-2">
 	<form name="userForm" ng-controller="UserController as newUser" ng-submit="newUser.addUser(main,newUser.user)">
 		<fieldset class="form-group">
 			<input type="text" ng-model="newUser.user.name" class="form-control" placeholder="Name" title="Name" />
@@ -60,37 +91,65 @@
 			<input type="submit" class="btn btn-primary pull-right" value="Submit User">
 		</fieldset>
 	</form>
+	</div>
+	</div>
 	<br /> 
 		<header>
-			<h1 class="text-center">AHP Tasks</h1>
-		</header>
-		<div class="list-group">
-			<div class="list-group-item" ng-repeat="user in main.people track by user._id" ng-init="main.taskConnect(user)">
-				<button class="btn btn-danger pull-right" ng-click="main.deleteUser(user,$index)">Delete User</button>
-				<h3>{{user.name}}</h3>
-				<ul>
-					<h4>Tasks</h4>
-					<div ng-repeat="task in user.tasks | orderBy:natural('priority')">
-						<span ng-class="{'escalate':task.priority > 10,'complete':task.complete}">
-						<input type="checkbox" ng-click="main.toggleComplete(user,task)" ng-checked="task.complete">
-						<a href=""><i class="fa fa-trash-o" ng-click="main.deleteTask(user,task)"></i></a> {{task.text}}
-						&nbsp;&nbsp;&nbsp;&nbsp;{{task.priority}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
-						<a href=""><i class="fa fa-arrow-up fa-lg" ng-click="main.upTask(user,task)"></i></a>
-						<a href=""><i class="fa fa-arrow-down fa-lg" ng-click="main.downTask(user,task)"></i></a>
-					</div>
-					<button class="btn btn-warning pull-right" ng-click="main.clearComplete(user)">Clear Completed Tasks</button>
-				</ul>
-				<form name="taskForm" ng-controller="TaskController as taskCtrl" ng-submit="taskCtrl.addTask(user)" ng-init="taskCtrl.connect(user)">
-					{{taskCtrl.task.text}}
-					<h4>Add a task</h4>
-					<fieldset class="form-group">
-						<textarea ng-model="taskCtrl.task.text" class="form-control" placeholder="Carrying around a ladder" title="Name"></textarea>
-					</fieldset>
-					<fieldset class="form-group">
-						<Input type="submit" class="btn btn-primary pull-right" value="Submit Task">
-					</fieldset>
-				</form>
-			</div>
+		<div class="row">
+			<h1 class="text-center col-lg-12">AHP Tasks</h1>
+			<br />
 		</div>
+		</header>
+		<div class="row">
+			<div class="col-lg-offset-2">
+					<div ng-repeat="user in main.people" ng-init="main.taskConnect(user)">
+					<div class="col-lg-5 user-box">
+						<div class="inner-user">
+							<h3 class="text-center">{{user.name}}</h3>
+							<div class="pull-left deleteUser text-center" style="margin-bottom:15px;" ng-click="main.deleteUser(user,$index)"><i class="fa fa-trash-o fa-2x"></i></div>
+							<h4>Tasks</h4>
+							<table class="table">
+							<thead>
+								<th class="text-center">Complete</th>
+								<th class="text-center">Delete</th>
+								<th>Task</th>
+								<th class="text-center">Priority</th>
+								<th class="text-center">Increase</th>
+								<th class="text-center">Decrease</th>
+							</thead>
+							<tbody>
+							<tr ng-hide="user.newTask.text == ''">
+									<td></td>
+									<td class="text-center deleteBtn middle-valign"></td>
+									<td> {{user.newTask.text}}</td>
+									<td class="text-center middle-valign">1</td>
+									<td class="text-center upPriority middle-valign"></td>
+									<td class="text-center downPriority middle-valign"></td>
+							</tr>	
+							<tr ng-class="{'escalate':task.priority > 10,'complete':task.complete}" ng-repeat="task in user.tasks | orderBy:natural('priority')">
+							<td ng-click="main.toggleComplete(user,task)" class="completeBtn text-center middle-valign"><i ng-class="{'fa fa-check fa-lg':task.complete}"></i></td>
+									<td class="text-center deleteBtn middle-valign" ng-click="main.deleteTask(user,task)"><i class="fa fa-trash-o fa-lg"></i></td>
+									<td> {{task.text}}</td>
+									<td class="text-center middle-valign">{{task.priority}}</td>
+									<td class="text-center upPriority middle-valign" ng-click="main.upTask(user,task)"><i class="fa fa-plus fa-lg"></i></td>
+									<td class="text-center downPriority middle-valign" ng-click="main.downTask(user,task)"><i class="fa fa-minus fa-lg"></i></td>
+							</tr>
+							</tbody>
+							</table>
+							</div>
+						<form name="taskForm" ng-submit="main.addTask(user,user.newTask)">
+							<fieldset class="form-group">
+								<input type="text" ng-model="user.newTask.text" class="form-control" placeholder="Enter a Task" title="Name">
+							</fieldset>
+							<fieldset class="form-group">
+								<Input type="submit" class="btn btn-primary" value="Submit Task"><button class="btn btn-warning pull-right" ng-click="main.clearComplete(user)">Clear Completed Tasks</button>
+							</fieldset>
+						</form>
+						</div>
+					<div ng-class="{'clearfix':$index % 2 == 1}"></div>
+					</div>
+				</div>
+				</div>
+				</div>
 	</body>
 </html>
