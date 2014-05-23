@@ -71,6 +71,9 @@
 			color:black;
 			width:50px;
 		}	
+		.atleastbig{
+			min-width:300px;
+		}
 		.deleteUser:hover{
 			color:red;
 		}
@@ -107,12 +110,12 @@
 							<div class="table-responsive">
 							<table class="table table-condensed">
 							<thead>
-								<th class="text-center"><i class="fa fa-check-square-o"></i></th>
-								<th class="text-center">Delete</th>
-								<th width="50%">Task</th>
-								<th class="text-center">Weight</th>
-								<th class="text-center">Up</th>
-								<th class="text-center">Down</th>
+								<th class="col-sm-1 text-center"><i class="fa fa-check-square-o"></i></th>
+								<th class="col-sm-1 text-center">Del</th>
+								<th class="col-sm-7 ">Task</th>
+								<th class="col-sm-1 text-center"><i class="fa fa-sort-numeric-asc fa-lg"></i></th>
+								<th class="col-sm-1 text-center">Up</th>
+								<th class="col-sm-1 text-center">Down</th>
 							</thead>
 							<tbody>
 							<tr ng-hide="user.newTask.text == ''">
