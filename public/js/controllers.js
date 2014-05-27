@@ -1,25 +1,10 @@
-(function(){
-	var app = angular.module('ahpTasks', ['naturalSort']);
+	'use strict';
 
-	app.directive('ngConfirmClick', [
-	  function(){
-	    return {
-	      priority: -1,
-	      restrict: 'A',
-	      link: function(scope, element, attrs){
-	        element.bind('click', function(e){
-	          var message = attrs.ngConfirmClick;
-	          if(message && !confirm(message)){
-	            e.stopImmediatePropagation();
-	            e.preventDefault();
-	          }
-	        });
-	      }
-	    }
-	  }
-	]);
+	/* controllers.js */
 
-	app.controller("UserController",function($http){
+	var ahptasksControllers  = angular.module('ahptasksControllers',[]);
+
+	ahptasksControllers.controller("UserController",function($http){
 		this.user={};
 		this.addUser = function(main,user){
 			var big = this;
@@ -33,7 +18,7 @@
 		};
 	});
 		
-	app.controller('MainController',function($http){
+	ahptasksControllers.controller('MainController',function($http){
 		var socket = io.connect();
 		var main = this;
 
@@ -149,5 +134,3 @@
 				});
 		};
 	});
-
-})();
