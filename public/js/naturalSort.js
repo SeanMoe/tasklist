@@ -104,7 +104,8 @@ angular.module("naturalSort", [])
     "use strict";
     $rootScope.natural = function (field) {
         return function (item) {
-            return naturalService.naturalValue(item[field]);
+            //times -1 to flip it
+            return (-1)*naturalService.naturalValue(item[field]);
         };
     };
 }]);
