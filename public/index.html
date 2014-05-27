@@ -130,7 +130,7 @@
 							</tr>	
 							<tr ng-class="{'escalate':task.priority > 10,'complete':task.complete}" ng-repeat="task in user.tasks | orderBy:natural('priority')">
 							<td ng-click="main.toggleComplete(user,task)" class="completeBtn text-center middle-valign"><i ng-class="{'fa fa-check fa-lg':task.complete}"></i></td>
-									<td class="text-center deleteBtn middle-valign" ng-click="main.deleteTask(user,task)"><i class="fa fa-trash-o fa-lg"></i></td>
+									<td class="text-center deleteBtn middle-valign" ng-confirm-click="Are you sure you want to delete {{task.text}}?" ng-click="main.deleteTask(user,task)"><i class="fa fa-trash-o fa-lg"></i></td>
 									<td> {{task.text}}</td>
 									<td class="text-center middle-valign">{{task.priority}}</td>
 									<td class="text-center upPriority middle-valign" ng-click="main.upTask(user,task)"><i class="fa fa-plus fa-lg"></i></td>
