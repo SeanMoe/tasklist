@@ -44,6 +44,21 @@
 				console.log("Error"+data);
 			});
 
+		this.cancelTaskEdit = function(){
+			main.task.edit = false;
+		}
+
+		this.editTask = function(user,task){
+			console.log('hi');
+			$http.put('/api/users/'+user._id+'/task/'+task._id,task).
+			success(function(data){
+				console.log(data);
+			}).
+			error(function(data){
+				console.log("Error "+data);
+			});
+		};
+
 		this.addTask = function(user,task){
 			user.newTask={'text':''};
 			$http.post('/api/users/'+user._id,task).

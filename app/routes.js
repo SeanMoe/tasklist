@@ -63,6 +63,20 @@ module.exports = function(app){
 		});
 	});
 
+	app.put('/api/users/:user_id/task/:task_id',function(req,res){
+		User.findById(req.params.user_id,function(err,user){
+			for(var i=0;i<user.tasks.length;i++){
+				if(user.tasks[i]._id == req.params.task_id){
+					user.tasks[i].text = req.body.text;
+					user.save();
+					io.sockets.emit("task:update:user:"+req.params.user_id);
+					res.json("Success");
+				}
+			}
+			res.json("Task not found");
+		});
+	});
+
 	app.post('/api/users',function(req,res){
 		User.create({
 			name:req.body.name
@@ -85,8 +99,9 @@ module.exports = function(app){
 			if(err)
 				console.log(err);
 			res.json(user.tasks);
-		})
-	})
+		});
+	});
+
 
 	app.post('/api/users/:user_id',function(req,res){
 		User.findById(req.params.user_id,function(err,user){
