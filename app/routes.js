@@ -67,7 +67,7 @@ module.exports = function(app){
 		User.findById(req.params.user_id,function(err,user){
 			for(var i=0;i<user.tasks.length;i++){
 				if(user.tasks[i]._id == req.params.task_id){
-					user.tasks[i].text = req.body.text;
+					user.tasks[i].text = req.body.newText;
 					user.save();
 					io.sockets.emit("task:update:user:"+req.params.user_id);
 					res.json("Success");
