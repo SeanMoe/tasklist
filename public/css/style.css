@@ -1,0 +1,50 @@
+li{
+	text-decoration:none;
+}
+.escalate{
+	font-weight:bold;
+	font-size:1.2em;
+	color:red;
+}
+.complete{
+	opacity:.4;
+	text-decoration: line-through;
+	color:green;
+}
+.user-box{	
+	position:relative;
+	right:0;
+}
+.inner-user{
+	display:block;
+	margin-bottom:20px;
+	border:1px solid #ddd;
+	padding:10px;
+	border-radius:4px;
+}
+.middle-valign{
+	vertical-align:middle !important;
+}
+.completeBtn:hover, .downPriority:hover{
+	color:white;
+	background-color:green;
+}
+.deleteBtn:hover, .upPriority:hover{
+	color:white;
+	background-color:red;			
+}
+.deleteUser{
+	position:absolute;
+	background-color:#ddd;
+	top:10px;
+	left:30px;
+	border:1px solid #ccd;
+	color:black;
+	width:50px;
+}	
+.deleteUser:hover{
+	color:red;
+}
+.taskedit{
+	width:100%;
+}
