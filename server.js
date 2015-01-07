@@ -20,8 +20,8 @@
 	mongoose.connect(config.mongoose.db);
 
 	// Basic Auth
-	username = config.auth.username;
-	password = config.auth.password;
+	var username = config.auth.username;
+	var password = config.auth.password;
 	app.use(express.basicAuth(username, password));
 
 	//Configuration

@@ -1,7 +1,6 @@
 <!-- index.html -->
 <!doctype html>
 
-<!-- ASSIGN OUR ANGULAR MODULE -->
 <html ng-app="ahpTasks">
 <head>
 	<!-- META -->
@@ -11,8 +10,9 @@
 	<title>AHP Tasks</title>
 
 	<!-- SCROLLS -->
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans:700italic,800italic,400,800,600' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" />
 	<link rel="stylesheet" href="css/style.css" />
 
 	<!-- SPELLS -->
@@ -24,21 +24,36 @@
 	<script src="js/directives.js"></script>
 	<script src="js/naturalSort.js"></script>
 </head>
-	<body ng-controller="MainController as main">
-	<div class="container">
+	<body ng-controller="MainController as main" ng-init="main.showFirst()">
+	<div class="container main-window">
 		<header>
 		<div class="row">
 			<h1 class="text-center col-lg-12">AHP Tasks</h1>
-			<br />
+			<div class="nav-icon" data-state="open">
+    			<i class="fa fa-navicon fa-2x"></i>
+		  	</div>
+			<br /><br /><br />
 		</div>
 		</header>
+		<div class="sidebar">
+			<h3><i class="fa fa-male"></i> People</h3>
+			<ul class="user-select">
+				<li ng-repeat="user in main.people" ng-class="{active: user.active == true}" ng-click="main.showHideUser(user)">{{user.name}}</li>
+			</ul>
+			<form name="userForm" ng-controller="UserController as newUser" ng-submit="newUser.addUser(main,newUser.user)">
+				<input type="text" ng-model="newUser.user.name" class="form-control" placeholder="Name" title="Name" />
+				<button class="btn btn-primary">Add Person</button>
+			</form>
+		</div>
 		<div class="row">
-				<div ng-repeat="user in main.people" ng-init="main.taskConnect(user)">
-					<div class="col-md-6 user-box">
+				<div class="select-user">
+					<h2>Select a person from the menu on the left</h2>
+				</div>
+				<div class="user-boxes" ng-repeat="user in main.people" ng-init="main.taskConnect(user)" data-user-name="{{user.name}}">
+					<div class="col-md-12 user-box">
 						<div class="inner-user">
 							<h3 class="text-center">{{user.name}}</h3>
-							<div class="pull-left deleteUser text-center" style="margin-bottom:15px;" ng-confirm-click="Are you sure you want to delete {{user.name}}?" ng-click="main.deleteUser(user,$index)"><i class="fa fa-trash-o fa-2x"></i></div>
-							<h4>Tasks</h4>
+							<div class="deleteUser text-center" style="margin-bottom:15px;" ng-confirm-click="Are you sure you want to delete {{user.name}}?" ng-click="main.deleteUser(user,$index)"><i class="fa fa-trash-o fa-2x"></i></div>
 							<div class="table-responsive">
 							<table class="table table-condensed">
 							<thead>
@@ -50,14 +65,14 @@
 								<th class="col-sm-1 text-center">Down</th>
 							</thead>
 							<tbody>
-							<tr ng-class="{'escalate':task.priority > 10,'complete':task.complete}" ng-repeat="task in user.tasks | orderBy:natural('priority')">
+							<tr ng-class="{'complete':task.complete}" ng-repeat="task in user.tasks | orderBy:natural('priority')">
 							<td ng-click="main.toggleComplete(user,task)" ng-init="task.edit=false" class="completeBtn text-center middle-valign"><i ng-class="{'fa fa-check fa-lg':task.complete}"></i></td>
 									<td class="text-center deleteBtn middle-valign" ng-confirm-click="Are you sure you want to delete {{task.text}}?" ng-click="main.deleteTask(user,task)"><i class="fa fa-trash-o fa-lg"></i></td>
 									<td>
-									<span ng-click="task.edit = true;task.newText=task.text" ng-hide="task.edit">{{task.text}}</span>
+									<span ng-class="{'escalate':task.priority > 10}" ng-click="task.edit = true;task.newText=task.text" ng-hide="task.edit">{{task.text}}</span>
 									<span ng-show="task.edit"><form ng-submit="main.editTask(user,task)" class="taskeditform"><input type="text" class="taskedit" ng-init="main.bindEnter" ng-model="task.newText"></form><button class="btn btn-primary" ng-click="main.editTask(user,task)">Save</button> <button class="btn btn-warning" ng-click="task.edit=false">Cancel</button></span>
 									</td>		
-									<td class="text-center middle-valign">{{task.priority}}</td>
+									<td ng-class="{'escalate':task.priority > 10}" class="text-center middle-valign">{{task.priority}}</td>
 									<td class="text-center upPriority middle-valign" ng-click="main.upTask(user,task)"><i class="fa fa-plus fa-lg"></i></td>
 									<td class="text-center downPriority middle-valign" ng-click="main.downTask(user,task)"><i class="fa fa-minus fa-lg"></i></td>
 							</tr>
@@ -85,16 +100,9 @@
 					<div ng-class="{'clearfix':$index % 2 == 1}"></div>
 					</div>
 				</div>
-				</div>
-			<div class="col-lg-4 col-lg-offset-4">
-				<form name="userForm" ng-controller="UserController as newUser" ng-submit="newUser.addUser(main,newUser.user)">
-					<fieldset class="form-group">
-						<input type="text" ng-model="newUser.user.name" class="form-control" placeholder="Name" title="Name" />
-					</fieldset>
-					<fieldset class="form-group">
-						<input type="submit" class="btn btn-primary pull-right" value="Submit User">
-					</fieldset>
-				</form>
+				
 			</div>
+			<div class="right-overlay"></div>
 	</body>
+	<script src="js/script.js"></script><!--Load after page -->
 </html>

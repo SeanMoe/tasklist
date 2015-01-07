@@ -79,6 +79,23 @@
 
 			});
 		};
+		
+		this.showHideUser = function(user){
+			angular.forEach(main.people, function(user){
+				user.active = false;
+			});
+			$(".right-overlay").hide();
+			$(".select-user").hide();
+			user.active = true;
+			$(".user-boxes").hide();
+			$(".user-boxes[data-user-name='"+user.name+"']").show();
+		}
+		
+		this.showFirst = function(){
+			angular.forEach(main.people,function(user){
+				showHideUser(user);
+			});
+		}
 
 		this.clearComplete = function(user){
 			$http.post('/api/users/'+user._id+'/clearcomplete').
