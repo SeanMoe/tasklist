@@ -1,0 +1,9 @@
+module.exports = {
+	mongoose:{
+		db:"mongodb://" //path to a mongodb
+	},
+	auth:{
+		username:"",
+		password:"" //basic auth credentials
+	}
+}
