@@ -183,10 +183,11 @@ li {
 .middle-valign{
 	vertical-align:middle !important;
 }
-.completeBtn:hover, .downPriority:hover{
+
+.deleteBtn:hover, .downPriority:hover{
 	background-color:#019875;
 }
-.deleteBtn:hover, .upPriority:hover{
+.completeBtn:hover, .upPriority:hover{
 	background-color:#D64541;			
 }
 
