@@ -49,8 +49,7 @@
 		}
 
 		this.editTask = function(user,task){
-			console.log('hi');
-			$http.put('/api/users/'+user._id+'/task/'+task._id,task).
+			$http.post('/api/users/'+user._id+'/task/'+task._id,task).
 			success(function(data){
 				console.log(data);
 			}).
