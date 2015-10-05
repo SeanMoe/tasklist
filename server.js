@@ -25,7 +25,8 @@
 	// Basic Auth
 	var username = config.auth.username;
 	var password = config.auth.password;
-	app.use(express.basicAuth(username, password));
+	//Remove basic auth for now
+	//app.use(express.basicAuth(username, password));
 
 	//Configuration
 	app.use(express.static(__dirname + '/public'));
